@@ -181,7 +181,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 17.63, y: 0.2}
+  m_Size: {x: 17.92, y: 0.52}
   m_EdgeRadius: 0
 --- !u!114 &259496446
 MonoBehaviour:
@@ -320,12 +320,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 054683afe969c4b43bf862f8bdef945d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPositionX: 12.3
-  gridPositionY: 31.8
-  cellSize: 0.45
+  gridPositionX: 11.5
+  gridPositionY: 32.44
+  cellSize: 0.44
   gridXSize: 16
-  gridYSize: 21
-  cellExpandX: -22
+  gridYSize: 22
+  cellExpandX: -24
   cellExpandY: 0
   gridCellPrefab: {fileID: 3517187422174508421, guid: 6bcfc4cd701f09340bebdcdc53be46f1, type: 3}
 --- !u!1 &519420028
@@ -655,7 +655,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 17.63, y: 0.2}
+  m_Size: {x: 17.92, y: 0.52}
   m_EdgeRadius: 0
 --- !u!114 &1388605771
 MonoBehaviour:
@@ -754,7 +754,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 17.63, y: 0.2}
+  m_Size: {x: 17.92, y: 0.52}
   m_EdgeRadius: 0
 --- !u!114 &1637805017
 MonoBehaviour:
@@ -910,7 +910,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 17.63, y: 0.2}
+  m_Size: {x: 17.92, y: 0.52}
   m_EdgeRadius: 0
 --- !u!114 &2127128319
 MonoBehaviour:
