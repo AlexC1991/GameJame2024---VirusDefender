@@ -10,8 +10,9 @@ namespace Batty251
         [SerializeField] private BarrierDataContiner barrierBool;
         [SerializeField] private BugCollisionDetection bugBool;
         [SerializeField] private WallCollisionDataContainer wallDetection;
+        [SerializeField] private GameObject fireWall;
         [SerializeField] private float movementSpeed;
-       // private float originalMovement;
+        private float originalMovement;
         private int _wallPaperHitCounter;
         private int _pathChooser;
         private int _lastCount;
@@ -20,14 +21,14 @@ namespace Batty251
         private int _lastPathChooser;
         private Vector2 GetDirectionVector;
         private float raycastDistance;
-        // private const float stopMovement = 0;
-        
-        /*private void Awake()
-        {
-            originalMovement = movementSpeed;
-        }*/
+         private const float stopMovement = 0;
 
-        private void Start()
+         private void Awake()
+         {
+             originalMovement = movementSpeed;
+         }
+
+         private void Start()
         {
             _pathChooser = Random.Range(1, 4);
             StartCoroutine(BugBehavior());
@@ -44,6 +45,7 @@ namespace Batty251
 
         private void Update()
         {
+            
             if (wallDetection.hitWall)
             {
                 _wallPaperHitCounter += 1;
@@ -76,6 +78,18 @@ namespace Batty251
                 _currentTimer = 0;
                 bugBool.hitBug = false;
                 hitOtherBug = false;
+            }
+            else if (fireWall.activeInHierarchy)
+            {
+                movementSpeed = -3 * Time.deltaTime;
+                MoveRight();
+                MoveLeft();
+                MoveUp();
+                MoveDown();
+            }
+            else if (!fireWall.activeInHierarchy)
+            {
+                movementSpeed = originalMovement;
             }
 
             // Move in the chosen path
