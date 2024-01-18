@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Batty251
@@ -13,11 +12,6 @@ namespace Batty251
             {
                 barrierBool.hitWall = true;
             }
-        }
-
-        private void Update()
-        {
-            Debug.Log(barrierBool.hitWall);
         }
     }
 }

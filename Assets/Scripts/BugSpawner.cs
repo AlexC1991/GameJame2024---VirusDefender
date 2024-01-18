@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Batty251
 {
@@ -7,6 +8,10 @@ namespace Batty251
     {
         [SerializeField] private GameObject spawnGameBug;
         private Transform currentLocation;
+        [SerializeField] private GameObject bugStorageContainer;
+        private string randomBugName = "Bug";
+        private GameObject bug;
+        private int randomNumber;
 
         void Start()
         {
@@ -19,9 +24,16 @@ namespace Batty251
             while (true)
             {
                 yield return new WaitForSeconds(3);
-                Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
+               bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
+                bug.transform.parent = bugStorageContainer.transform;
+                bug.transform.name = randomBugName + randomNumber;
             }
             
+        }
+        
+        private void Update()
+        {
+            randomNumber = Random.Range(1, 999999);
         }
     }
 }

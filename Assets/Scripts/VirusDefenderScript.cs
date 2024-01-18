@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +11,10 @@ namespace Batty251
         [SerializeField] private GameObject percentageText;
         [SerializeField] private Text percentageIndicatorText;
         [SerializeField] private GameObject virusWallDefender;
-        private bool mouseInLocation;
+        [SerializeField] private GameObject backgroundColor;
+        [SerializeField] private StatusEffects currentTile;
+        private GameObject[] childObjects;
+        private Transform childrenInParent;
 
         private void Start()
         {
@@ -22,8 +24,27 @@ namespace Batty251
             {
                 indicators.SetActive(false);
             }
+
+            StartCoroutine(childChecker());
         }
 
+        IEnumerator childChecker()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(0.5f);
+                childrenInParent = backgroundColor.transform;
+                childObjects = GetAllChildren(childrenInParent);
+                if (!currentTile._changedTheColor && childObjects != null)
+                {
+                    foreach (GameObject g in childObjects)
+                    {
+                        currentTile.originalTileColorEffect = g.GetComponent<SpriteRenderer>().color;
+                    }
+                }
+            }
+        }
+        
         public void OnClickedStart()
         {
             StartCoroutine(PercentageCalculateStart());
@@ -92,14 +113,39 @@ namespace Batty251
             yield return new WaitForSecondsRealtime(1.5f);
             scanningWindow.SetActive(false);
             percentageText.SetActive(false);
-            virusWallDefender.SetActive(true);
+            childrenInParent = backgroundColor.transform;
+            childObjects = GetAllChildren(childrenInParent);
+            currentTile._changedTheColor = true;
+            foreach (var g in childObjects)
+            {
+                g.GetComponent<SpriteRenderer>().color = currentTile.tileSlowEffectColor;
+            }
             foreach (GameObject indicators in percentageIndicators)
             {
                 indicators.SetActive(false);
             }
             yield return new WaitForSecondsRealtime(3f);
-            virusWallDefender.SetActive(false);
-            
+            childrenInParent = backgroundColor.transform;
+            childObjects = GetAllChildren(childrenInParent);
+            foreach (var g in childObjects)
+            {
+                g.GetComponent<SpriteRenderer>().color = currentTile.originalTileColorEffect;
+            }
+            currentTile._changedTheColor = false;
+        }
+        
+        private GameObject[] GetAllChildren(Transform parent)
+        {
+            int childCount = parent.childCount;
+            GameObject[] children = new GameObject[childCount];
+
+            for (int i = 0; i < childCount; i++)
+            {
+                Transform child = parent.GetChild(i);
+                children[i] = child.gameObject;
+            }
+
+            return children;
         }
     }
 }

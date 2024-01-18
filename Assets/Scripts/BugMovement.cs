@@ -1,9 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
-
 namespace Batty251
-
 {
     public class BugMovement : MonoBehaviour
     {
@@ -11,7 +8,7 @@ namespace Batty251
         [SerializeField] private BugCollisionDetection bugBool;
         [SerializeField] private WallCollisionDataContainer wallDetection;
         [SerializeField] private GameObject fireWall;
-        [SerializeField] private float movementSpeed;
+        public float movementSpeed = 0.5f;
         private float originalMovement;
         private int _wallPaperHitCounter;
         private int _pathChooser;
@@ -21,7 +18,6 @@ namespace Batty251
         private int _lastPathChooser;
         private Vector2 GetDirectionVector;
         private float raycastDistance;
-         private const float stopMovement = 0;
 
          private void Awake()
          {
@@ -45,7 +41,6 @@ namespace Batty251
 
         private void Update()
         {
-            
             if (wallDetection.hitWall)
             {
                 _wallPaperHitCounter += 1;
@@ -79,19 +74,6 @@ namespace Batty251
                 bugBool.hitBug = false;
                 hitOtherBug = false;
             }
-            else if (fireWall.activeInHierarchy)
-            {
-                movementSpeed = -3 * Time.deltaTime;
-                MoveRight();
-                MoveLeft();
-                MoveUp();
-                MoveDown();
-            }
-            else if (!fireWall.activeInHierarchy)
-            {
-                movementSpeed = originalMovement;
-            }
-
             // Move in the chosen path
             PathChooser();
         }
