@@ -38,8 +38,12 @@ namespace Batty251
             {
                 foreach (GameObject bugG in childinParent)
                 {
-                    bugM = bugG.GetComponent<BugMovement>();
-                    bugM.movementSpeed = originalMovementSpeed;
+                    if (bugG != null)
+                    {
+                        bugM = bugG.GetComponent<BugMovement>();
+                        bugM.movementSpeed = originalMovementSpeed;
+                    }
+                    
                 }
             }
             else if (_effects._changedTheColor && childinParent != null)

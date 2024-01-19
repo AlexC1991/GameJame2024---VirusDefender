@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,10 +17,18 @@ namespace Batty251
         private GameObject[] childObjects;
         private Transform childrenInParent;
 
-        private void Start()
+        private void Awake()
         {
+            for (int i = 0; i < percentageIndicators.Length; i++)
+            {
+                percentageIndicators[i].SetActive(false);
+            }
             scanningWindow.SetActive(false);
             virusWallDefender.SetActive(false);
+        }
+
+        private void Start()
+        {
             foreach (GameObject indicators in percentageIndicators)
             {
                 indicators.SetActive(false);
@@ -113,6 +122,10 @@ namespace Batty251
             yield return new WaitForSecondsRealtime(1.5f);
             scanningWindow.SetActive(false);
             percentageText.SetActive(false);
+            for (int i = 0; i < percentageIndicators.Length; i++)
+            {
+                percentageIndicators[i].SetActive(false);
+            }
             childrenInParent = backgroundColor.transform;
             childObjects = GetAllChildren(childrenInParent);
             currentTile._changedTheColor = true;
