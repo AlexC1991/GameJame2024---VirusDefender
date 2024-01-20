@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1e04cb3400542a1418630247d9dd6c37
+guid: f0c1be2e55e966b49a6d4b1edd022719
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CommandScreenInputBar_0
+      name: Date & Time Section_0
       rect:
         serializedVersion: 2
-        x: 1225
-        y: 673
-        width: 43
-        height: 35
+        x: 1048
+        y: 4
+        width: 230
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 75f433c6f9ce3594c93cf6029d5ea477
-      internalID: 1891467457
+      spriteID: 7914411893c407b488ae0d499390696d
+      internalID: -1401581885
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      CommandScreenInputBar_0: 1891467457
+      Date & Time Section_0: -1401581885
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

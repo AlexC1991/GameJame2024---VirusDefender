@@ -12,6 +12,7 @@ namespace Batty251
         private string randomBugName = "Bug";
         private GameObject bug;
         private int randomNumber;
+        
 
         void Start()
         {
@@ -23,7 +24,7 @@ namespace Batty251
         {
             while (true)
             {
-                yield return new WaitForSeconds(3);
+                yield return new WaitForSeconds(8);
                bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
                 bug.transform.parent = bugStorageContainer.transform;
                 bug.transform.name = randomBugName + randomNumber;

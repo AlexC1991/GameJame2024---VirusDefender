@@ -14,6 +14,7 @@ namespace Batty251
         [SerializeField] private GameObject virusWallDefender;
         [SerializeField] private GameObject backgroundColor;
         [SerializeField] private StatusEffects currentTile;
+        [SerializeField] private WindowsOpen isItOpened;
         private GameObject[] childObjects;
         private Transform childrenInParent;
 
@@ -56,11 +57,17 @@ namespace Batty251
         
         public void OnClickedStart()
         {
-            StartCoroutine(PercentageCalculateStart());
+            
+            if (!isItOpened.isAWindowOpened)
+            {
+                StartCoroutine(PercentageCalculateStart());
+            }
+           
         }
 
         IEnumerator PercentageCalculateStart()
         {
+            isItOpened.isAWindowOpened = true;
             scanningWindow.SetActive(true);
             percentageText.SetActive(true);
             percentageIndicatorText.text = "1%";
@@ -122,6 +129,7 @@ namespace Batty251
             yield return new WaitForSecondsRealtime(1.5f);
             scanningWindow.SetActive(false);
             percentageText.SetActive(false);
+            isItOpened.isAWindowOpened = false;
             for (int i = 0; i < percentageIndicators.Length; i++)
             {
                 percentageIndicators[i].SetActive(false);

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1e04cb3400542a1418630247d9dd6c37
+guid: 67c2cf90dff05c248b6c84256bbebf2f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CommandScreenInputBar_0
+      name: ToolBar_0
       rect:
         serializedVersion: 2
-        x: 1225
-        y: 673
-        width: 43
-        height: 35
+        x: 0
+        y: 0
+        width: 1280
+        height: 59
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 75f433c6f9ce3594c93cf6029d5ea477
-      internalID: 1891467457
+      spriteID: 676a78de7bd77cb4fbf6ec8053ac7c38
+      internalID: 777408823
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      CommandScreenInputBar_0: 1891467457
+      ToolBar_0: 777408823
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

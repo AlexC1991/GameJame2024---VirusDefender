@@ -16,6 +16,7 @@ namespace Batty251
         [SerializeField] private GameObject foundBugsResultScreen;
         [SerializeField] private Text totalBugFoundText;
         [SerializeField] private GameObject bugContainer;
+        [SerializeField] private WindowsOpen isItOpened;
         
         private Transform childrenInParent;
         private GameObject[] childObjects;
@@ -34,11 +35,16 @@ namespace Batty251
 
         public void InitiateScan()
         {
-            StartCoroutine(StartingScanOfComputer());
+            if (!isItOpened.isAWindowOpened)
+            {
+                StartCoroutine(StartingScanOfComputer());
+            }
+            
         }
         
         IEnumerator StartingScanOfComputer()
         {
+            isItOpened.isAWindowOpened = true;
             scanningWindow.SetActive(true);
             percentageText.SetActive(true);
             percentageIndicatorText.text = "1%";
@@ -115,6 +121,7 @@ namespace Batty251
         {
             foundBugsResultScreen.SetActive(false);
             StartCoroutine(GetThemBugs());
+            isItOpened.isAWindowOpened = false;
         }
 
 
