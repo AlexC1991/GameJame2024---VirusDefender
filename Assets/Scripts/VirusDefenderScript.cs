@@ -11,21 +11,22 @@ namespace Batty251
         [SerializeField] private GameObject[] percentageIndicators;
         [SerializeField] private GameObject percentageText;
         [SerializeField] private Text percentageIndicatorText;
-        [SerializeField] private GameObject virusWallDefender;
         [SerializeField] private GameObject backgroundColor;
         [SerializeField] private StatusEffects currentTile;
         [SerializeField] private WindowsOpen isItOpened;
         private GameObject[] childObjects;
         private Transform childrenInParent;
+        private int doubleClickChecker;
 
         private void Awake()
         {
+            doubleClickChecker = 0;
+            
             for (int i = 0; i < percentageIndicators.Length; i++)
             {
                 percentageIndicators[i].SetActive(false);
             }
             scanningWindow.SetActive(false);
-            virusWallDefender.SetActive(false);
         }
 
         private void Start()
@@ -54,15 +55,38 @@ namespace Batty251
                 }
             }
         }
-        
-        public void OnClickedStart()
+
+        public void DoubleClickerStart()
         {
-            
+            if (!isItOpened.isAWindowOpened)
+            {
+                StartCoroutine(DoubleCLickCoroutine());
+            }
+           
+        }
+        
+        private void OnStart()
+        {
             if (!isItOpened.isAWindowOpened)
             {
                 StartCoroutine(PercentageCalculateStart());
             }
            
+        }
+
+        IEnumerator DoubleCLickCoroutine()
+        {
+            doubleClickChecker += 1;
+            yield break;
+        }
+
+        private void Update()
+        {
+            if (doubleClickChecker >= 2)
+            {
+                OnStart();
+                doubleClickChecker = 0;
+            }
         }
 
         IEnumerator PercentageCalculateStart()

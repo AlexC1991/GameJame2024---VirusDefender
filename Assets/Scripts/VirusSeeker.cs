@@ -21,6 +21,7 @@ namespace Batty251
         private Transform childrenInParent;
         private GameObject[] childObjects;
         private int numChildrenToDelete;
+        private int doubleClickChecker;
 
         private void Awake()
         {
@@ -33,7 +34,22 @@ namespace Batty251
             }
         }
 
-        public void InitiateScan()
+        public void DoubleClickerStart()
+        {
+            if (!isItOpened.isAWindowOpened)
+            {
+                StartCoroutine(DoubleClickStartCoroutine());
+            }
+        }
+
+
+        IEnumerator DoubleClickStartCoroutine()
+        {
+            doubleClickChecker += 1;
+            yield break;
+        }
+
+        private void InitiateScan()
         {
             if (!isItOpened.isAWindowOpened)
             {
@@ -41,7 +57,16 @@ namespace Batty251
             }
             
         }
-        
+
+        private void Update()
+        {
+            if (doubleClickChecker >= 2)
+            {
+                InitiateScan();
+                doubleClickChecker = 0;
+            }
+        }
+
         IEnumerator StartingScanOfComputer()
         {
             isItOpened.isAWindowOpened = true;
@@ -127,17 +152,23 @@ namespace Batty251
 
         IEnumerator GetThemBugs()
         {
-            /*childrenInParent = bugContainer.transform;
-            childObjects = GetAllChildren(childrenInParent);*/
-            
             if (numChildrenToDelete <= childObjects.Length)
             {
                 for (int i = 0; i < numChildrenToDelete; i++)
                 {
+                    ParticleSystem particleSystem = childObjects[i].GetComponent<ParticleSystem>();
+                    childObjects[i].GetComponent<BugMovement>().movementSpeed = 0;
+                    // If it has a ParticleSystem component, play it
+                    if (particleSystem != null)
+                    {
+                        particleSystem.Play();
+                    }
+
+                    // Wait for a short time to let the particle system play (you can adjust the duration if needed)
+                    yield return new WaitForSeconds(0.3f);
                     Destroy(childObjects[i]);
                 }
             }
-            yield break;
         }
         
         private GameObject[] GetAllChildren(Transform parent)

@@ -16,17 +16,17 @@ namespace Batty251
         public void StartConsoleWindow()
         {
             StartCoroutine(StartConsoleLine());
-            inputFieldParent.onValueChanged.AddListener(OnInputValueChanged);
+            /*inputFieldParent.onValueChanged.AddListener(OnInputValueChanged);*/
         }
 
-        private void OnInputValueChanged(string text)
+        private void OnInputValueChanged()
         {
-            // Check for Backspace key in the input and prevent it
-            if (Input.GetKeyDown(KeyCode.Backspace)) {
-                inputFieldParent.text = currentDirectory;
-                inputFieldParent.selectionAnchorPosition = inputFieldParent.caretPosition;
-                inputFieldParent.selectionFocusPosition = inputFieldParent.caretPosition;
-                inputFieldParent.caretPosition = inputFieldParent.text.Length;
+            if (Input.GetKey(KeyCode.Backspace) || Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+            {
+                    inputFieldParent.text = currentDirectory;
+                    inputFieldParent.selectionAnchorPosition = inputFieldParent.caretPosition;
+                    inputFieldParent.selectionFocusPosition = inputFieldParent.caretPosition;
+                    inputFieldParent.caretPosition = inputFieldParent.text.Length;
             }
         }
         
@@ -36,9 +36,7 @@ namespace Batty251
             _sections = 0;
             yield return new WaitForSeconds(0.3f);
             inputFieldParent.text = "";
-            yield return new WaitForSeconds(0.3f);
             inputFieldParent.text += currentDirectory;
-            yield return new WaitForSeconds(0.2f);
             inputFieldParent.ActivateInputField();
             yield return new WaitForSeconds(0.001f);
             inputFieldParent.Select();
@@ -46,7 +44,6 @@ namespace Batty251
             inputFieldParent.selectionFocusPosition = inputFieldParent.caretPosition;
             inputFieldParent.caretPosition = inputFieldParent.text.Length;
             inputFieldParent.MoveTextEnd(false);
-            inputFieldParent.onValueChanged.AddListener(OnInputValueChanged);
         }
 
         private void Update()
@@ -61,6 +58,13 @@ namespace Batty251
                     StartCoroutine(StartConsoleLine());
                 }
             }
+
+            if (inputFieldParent.text == "")
+            {
+                OnInputValueChanged();
+            }
+
+            OnInputValueChanged();
         }
 
         private void CommandLinePrompt()
