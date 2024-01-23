@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Batty251
@@ -13,15 +14,20 @@ namespace Batty251
         
         private string currentDirectory = "SecurityComputer:/";
 
+
+        private void Start()
+        {
+            _sections = 1;
+        }
+
         public void StartConsoleWindow()
         {
             StartCoroutine(StartConsoleLine());
-            /*inputFieldParent.onValueChanged.AddListener(OnInputValueChanged);*/
         }
 
         private void OnInputValueChanged()
         {
-            if (Input.GetKey(KeyCode.Backspace) || Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+            if (Input.GetKey(KeyCode.Backspace))
             {
                     inputFieldParent.text = currentDirectory;
                     inputFieldParent.selectionAnchorPosition = inputFieldParent.caretPosition;
@@ -33,13 +39,12 @@ namespace Batty251
         IEnumerator StartConsoleLine()
         {
             isItOpened.isAWindowOpened = true;
-            _sections = 0;
-            yield return new WaitForSeconds(0.3f);
             inputFieldParent.text = "";
             inputFieldParent.text += currentDirectory;
             inputFieldParent.ActivateInputField();
-            yield return new WaitForSeconds(0.001f);
+            _sections = 0;
             inputFieldParent.Select();
+            yield return new WaitForSeconds(0.001f);
             inputFieldParent.selectionAnchorPosition = inputFieldParent.caretPosition;
             inputFieldParent.selectionFocusPosition = inputFieldParent.caretPosition;
             inputFieldParent.caretPosition = inputFieldParent.text.Length;
@@ -48,6 +53,8 @@ namespace Batty251
 
         private void Update()
         {
+            bool isInputAllowed = inputFieldParent.text == currentDirectory;
+            
             if (Input.GetKeyDown(KeyCode.Return)) {
                 if (_sections == 0)
                 {
@@ -59,12 +66,28 @@ namespace Batty251
                 }
             }
 
-            if (inputFieldParent.text == "")
+            if (isInputAllowed && _sections != 1)
+            {
+                if (Input.GetButton("Horizontal"))
+                {
+                    StartCoroutine(StartConsoleLine());
+                }
+                else if (Input.GetButton("Vertical"))
+                {
+                    StartCoroutine(StartConsoleLine());
+                }
+
+                if (Input.GetKey(KeyCode.Backspace) && isInputAllowed && _sections == 1)
+                {
+                    OnInputValueChanged();
+                }
+            }
+
+            if (inputFieldParent.text != currentDirectory && _sections == 1)
             {
                 OnInputValueChanged();
             }
-
-            OnInputValueChanged();
+            
         }
 
         private void CommandLinePrompt()
@@ -73,14 +96,14 @@ namespace Batty251
 
             if (trimmedInput.Equals("SecurityComputer:/Help", StringComparison.OrdinalIgnoreCase)) {
                 StartCoroutine(HelpChannel());
-                _sections = 1;
+                _sections = 2;
             }
             else if (string.IsNullOrEmpty(trimmedInput)) {
                 inputFieldParent.text = currentDirectory;
             }
             else
             {
-                _sections = 1;
+                _sections = 3;
                 StartCoroutine(ErrorChannel());
             }
             if (inputFieldParent.text == "") {
@@ -109,6 +132,7 @@ namespace Batty251
             inputFieldParent.text += "\n" + "\n" +  "USB Data Transfer/usb data transfer = Slowdown The USB Drive and Does  Damage To Any Viruses Coming From It";
             yield return new WaitForSeconds(0.4f);
             inputFieldParent.text += "\n" + "\n" +  "Please Press Return/Enter To Continue";
+            _sections = 1;
         }
 
         IEnumerator ErrorChannel()
@@ -117,6 +141,7 @@ namespace Batty251
             inputFieldParent.text += " \n \n Can Not Find That Interaction/Instructions";
             yield return new WaitForSeconds(0.2f);
             inputFieldParent.text += " \n \n \n \n \n Press the Enter/Return Key To Go Back";
+            _sections = 1;
         }
     }
 }

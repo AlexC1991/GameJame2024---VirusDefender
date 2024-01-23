@@ -7,7 +7,6 @@ namespace Batty251
         [SerializeField] private BarrierDataContiner barrierBool;
         [SerializeField] private BugCollisionDetection bugBool;
         [SerializeField] private WallCollisionDataContainer wallDetection;
-        [SerializeField] private GameObject fireWall;
         public float movementSpeed = 0.5f;
         private float originalMovement;
         private int _wallPaperHitCounter;
@@ -17,7 +16,8 @@ namespace Batty251
         private bool hitOtherBug;
         private int _lastPathChooser;
         private Vector2 GetDirectionVector;
-        private float raycastDistance;
+        private float raycastDistance = 1;
+        private RaycastHit2D hit;
 
          private void Awake()
          {
@@ -32,10 +32,11 @@ namespace Batty251
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Bug"))
+            if (other.CompareTag("BarrierWall"))
             {
                 bugBool.hitBug = true;
                 hitOtherBug = true;
+                Debug.Log("Detected Wall");
             }
         }
 
@@ -47,7 +48,7 @@ namespace Batty251
                 _lastCount = _wallPaperHitCounter;
                 wallDetection.hitWall = false;
             }
-            float timeCount = 3;
+            float timeCount = 5;
             
             _currentTimer += 0.5f * Time.deltaTime;
            
@@ -55,27 +56,35 @@ namespace Batty251
             {
                 StartCoroutine(BugBehavior());
                 _currentTimer = 0;
-            }
-            else if (_wallPaperHitCounter > _lastCount * 2) // Change direction if hits more than 2x lastCount
+            } 
+            
+            if (_wallPaperHitCounter > _lastCount * 2) // Change direction if hits more than 2x lastCount
             {
                 StartCoroutine(BugBehavior());
                 _currentTimer = 0;
             }
-            else if (barrierBool.hitWall)
+            
+            if ((barrierBool.hitWall))
             {
                 StartCoroutine(BugBehavior());
                 _currentTimer = 0;
                 barrierBool.hitWall = false;
             }
-            else if (hitOtherBug)
+            
+            if (hitOtherBug)
             {
                 StartCoroutine(BugBehavior());
                 _currentTimer = 0;
                 bugBool.hitBug = false;
                 hitOtherBug = false;
             }
-            // Move in the chosen path
+            
             PathChooser();
+            
+            if (hit.collider != null && hit.collider.gameObject.name != this.gameObject.name)
+            {
+                StartCoroutine(StartTheBugAvoidenceSystem());
+            }
         }
 
         private void MoveLeft()
@@ -123,11 +132,15 @@ namespace Batty251
         
         private bool DetectObstacle()
         {
-            // Raycast in the current direction
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, GetDirectionVector, raycastDistance);
-
-            // Check if an obstacle is hit
+            hit = Physics2D.Raycast(transform.position, GetDirectionVector, raycastDistance);
             return hit.collider != null;
+            
+        }
+
+        IEnumerator StartTheBugAvoidenceSystem()
+        {
+            StartCoroutine(BugBehavior());
+            yield break;
         }
 
         IEnumerator BugBehavior()
@@ -154,7 +167,3 @@ namespace Batty251
     }
 }
                     
-                
-
-
-  

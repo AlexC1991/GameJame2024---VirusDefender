@@ -28,7 +28,7 @@ namespace Batty251
         {
             wallC.hitWall = true;
             yield return new WaitForSeconds(0.5f);
-            Destroy(this.gameObject);
+            gameObject.GetComponent<Renderer>().sortingOrder = 2;
         }
     }
     
