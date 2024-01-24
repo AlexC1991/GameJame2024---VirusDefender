@@ -14,12 +14,17 @@ namespace Batty251
         [SerializeField] private GameObject backgroundColor;
         [SerializeField] private StatusEffects currentTile;
         [SerializeField] private WindowsOpen isItOpened;
+        [SerializeField] private GameObject cooldownErrorMessage;
+        private CoolDownInProgressScript coolingDownScript;
         private GameObject[] childObjects;
         private Transform childrenInParent;
         private int doubleClickChecker;
+        private Sprite thisSprite;
 
         private void Awake()
         {
+            thisSprite = gameObject.GetComponent<Image>().sprite;
+            coolingDownScript = gameObject.GetComponent<CoolDownInProgressScript>();
             doubleClickChecker = 0;
             
             for (int i = 0; i < percentageIndicators.Length; i++)
@@ -71,7 +76,6 @@ namespace Batty251
             {
                 StartCoroutine(PercentageCalculateStart());
             }
-           
         }
 
         IEnumerator DoubleCLickCoroutine()
@@ -82,11 +86,24 @@ namespace Batty251
 
         private void Update()
         {
-            if (doubleClickChecker >= 2)
+            if (doubleClickChecker >= 1 && GetComponent<Image>().sprite == thisSprite )
             {
                 OnStart();
                 doubleClickChecker = 0;
             }
+
+            if (GetComponent<Image>().sprite != thisSprite && doubleClickChecker >= 1)
+            {
+                StartCoroutine(CoolingErrorMessage());
+                doubleClickChecker = 0;
+            }
+        }
+
+        IEnumerator CoolingErrorMessage()
+        {
+            cooldownErrorMessage.SetActive(true);
+            yield return new WaitForSeconds(2);
+            cooldownErrorMessage.SetActive(false);
         }
 
         IEnumerator PercentageCalculateStart()
@@ -165,6 +182,7 @@ namespace Batty251
             {
                 g.GetComponent<SpriteRenderer>().color = currentTile.tileSlowEffectColor;
             }
+            StartCoroutine(CoolingDownNowMode());
             foreach (GameObject indicators in percentageIndicators)
             {
                 indicators.SetActive(false);
@@ -177,6 +195,13 @@ namespace Batty251
                 g.GetComponent<SpriteRenderer>().color = currentTile.originalTileColorEffect;
             }
             currentTile._changedTheColor = false;
+        }
+
+
+        IEnumerator CoolingDownNowMode()
+        {
+            coolingDownScript.StartCoolDown();
+            yield break;
         }
         
         private GameObject[] GetAllChildren(Transform parent)

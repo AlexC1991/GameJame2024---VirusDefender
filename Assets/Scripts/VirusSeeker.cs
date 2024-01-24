@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,14 +16,19 @@ namespace Batty251
         [SerializeField] private Text totalBugFoundText;
         [SerializeField] private GameObject bugContainer;
         [SerializeField] private WindowsOpen isItOpened;
-        
+        [SerializeField] private GameObject cooldownErrorMessage;
+        [SerializeField] private BugTotalContainer addedTotal;
+        private CoolDownInProgressScript coolingDownScript;
         private Transform childrenInParent;
         private GameObject[] childObjects;
         private int numChildrenToDelete;
         private int doubleClickChecker;
+        private Sprite thisSprite;
 
         private void Awake()
         {
+            thisSprite = gameObject.GetComponent<Image>().sprite;
+            coolingDownScript = gameObject.GetComponent<CoolDownInProgressScript>();
             scanningWindow.SetActive(false);
             percentageText.SetActive(false);
             foundBugsResultScreen.SetActive(false);
@@ -55,16 +59,28 @@ namespace Batty251
             {
                 StartCoroutine(StartingScanOfComputer());
             }
-            
         }
 
         private void Update()
         {
-            if (doubleClickChecker >= 2)
+            if (doubleClickChecker >= 1 && GetComponent<Image>().sprite == thisSprite)
             {
                 InitiateScan();
                 doubleClickChecker = 0;
             }
+            
+            if (GetComponent<Image>().sprite != thisSprite && doubleClickChecker >= 1)
+            {
+                StartCoroutine(CoolingErrorMessage());
+                doubleClickChecker = 0;
+            }
+        }
+        
+        IEnumerator CoolingErrorMessage()
+        {
+            cooldownErrorMessage.SetActive(true);
+            yield return new WaitForSeconds(2);
+            cooldownErrorMessage.SetActive(false);
         }
 
         IEnumerator StartingScanOfComputer()
@@ -145,6 +161,7 @@ namespace Batty251
         public void WipeBugs()
         {
             foundBugsResultScreen.SetActive(false);
+            StartCoroutine(AddBugDeathsToTotal());
             StartCoroutine(GetThemBugs());
             isItOpened.isAWindowOpened = false;
         }
@@ -167,8 +184,21 @@ namespace Batty251
                     // Wait for a short time to let the particle system play (you can adjust the duration if needed)
                     yield return new WaitForSeconds(0.3f);
                     Destroy(childObjects[i]);
+                    StartCoroutine(CoolingDownNowMode());
                 }
             }
+        }
+
+        IEnumerator AddBugDeathsToTotal()
+        {
+            addedTotal.totalBug += numChildrenToDelete;
+            yield break;
+        }
+        
+        IEnumerator CoolingDownNowMode()
+        {
+            coolingDownScript.StartCoolDown();
+            yield break;
         }
         
         private GameObject[] GetAllChildren(Transform parent)

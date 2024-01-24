@@ -1,5 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 namespace Batty251
 {
     public class BugMovement : MonoBehaviour
@@ -7,6 +10,9 @@ namespace Batty251
         [SerializeField] private BarrierDataContiner barrierBool;
         [SerializeField] private BugCollisionDetection bugBool;
         [SerializeField] private WallCollisionDataContainer wallDetection;
+        private GameObject backgroundTiles;
+        private GameObject[] childObjects;
+        private Transform childrenInParent;
         public float movementSpeed = 0.5f;
         private float originalMovement;
         private int _wallPaperHitCounter;
@@ -18,6 +24,7 @@ namespace Batty251
         private Vector2 GetDirectionVector;
         private float raycastDistance = 1;
         private RaycastHit2D hit;
+        HashSet<string> childNamesSet = new HashSet<string>();
 
          private void Awake()
          {
@@ -26,8 +33,17 @@ namespace Batty251
 
          private void Start()
         {
+            backgroundTiles = GameObject.Find("Computer");
             _pathChooser = Random.Range(1, 4);
             StartCoroutine(BugBehavior());
+            StartCoroutine(tileChecker());
+        }
+
+        IEnumerator tileChecker()
+        {
+                childrenInParent = backgroundTiles.transform;
+                childObjects = GetAllChildren(childrenInParent);
+                yield return new WaitForSeconds(0.8f);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -37,6 +53,14 @@ namespace Batty251
                 bugBool.hitBug = true;
                 hitOtherBug = true;
                 Debug.Log("Detected Wall");
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (hit.collider != null && hit.collider.gameObject.name != this.gameObject.name)
+            {
+                StartCoroutine(checkingNames());
             }
         }
 
@@ -80,11 +104,25 @@ namespace Batty251
             }
             
             PathChooser();
-            
-            if (hit.collider != null && hit.collider.gameObject.name != this.gameObject.name)
+        }
+
+        IEnumerator checkingNames()
+        {
+            // Clear the set before rebuilding it
+            childNamesSet.Clear();
+
+            foreach (GameObject g in childObjects)
             {
+                childNamesSet.Add(g.transform.name);
+            }
+
+            if (!childNamesSet.Contains(hit.collider.gameObject.name))
+            {
+                Debug.Log("Ray Hit This: " + hit.collider.gameObject.name);
                 StartCoroutine(StartTheBugAvoidenceSystem());
             }
+
+            yield break;
         }
 
         private void MoveLeft()
@@ -134,7 +172,6 @@ namespace Batty251
         {
             hit = Physics2D.Raycast(transform.position, GetDirectionVector, raycastDistance);
             return hit.collider != null;
-            
         }
 
         IEnumerator StartTheBugAvoidenceSystem()
@@ -163,6 +200,20 @@ namespace Batty251
 
             _pathChooser = newPathChooser;
             _lastPathChooser = _pathChooser;
+        }
+        
+        private GameObject[] GetAllChildren(Transform parent)
+        {
+            int childCount = parent.childCount;
+            GameObject[] children = new GameObject[childCount];
+
+            for (int i = 0; i < childCount; i++)
+            {
+                Transform child = parent.GetChild(i);
+                children[i] = child.gameObject;
+            }
+
+            return children;
         }
     }
 }
