@@ -7,6 +7,7 @@ namespace Batty251
 {
     public class DateAndTimeScript : MonoBehaviour
     {
+        [SerializeField] private DayAndWeekTrackerContainer whatDayAndWeekIsIt;
         [SerializeField] private Text dateAndTimeDisplay;
         [SerializeField] private GameObject clipBoard;
         [SerializeField] private Text weekText;
@@ -26,8 +27,10 @@ namespace Batty251
         
         private void Start()
         {
-            weekNumber = 1;
-            switchNumber = 1;
+            whatDayAndWeekIsIt.dayOfTheWeek = 1;
+            whatDayAndWeekIsIt.weekOfTheCurrent = 1;
+            weekNumber = whatDayAndWeekIsIt.weekOfTheCurrent;
+            switchNumber = whatDayAndWeekIsIt.dayOfTheWeek;
             DayChanger();
             clipBoard.SetActive(false);
             StartOfDay();
@@ -97,11 +100,14 @@ namespace Batty251
             if (switchNumber < 5)
             {
                 switchNumber += 1;
+                whatDayAndWeekIsIt.dayOfTheWeek = switchNumber;
             }
             else
             {
                 weekNumber += 1;
                 switchNumber = 1;
+                whatDayAndWeekIsIt.dayOfTheWeek = switchNumber;
+                whatDayAndWeekIsIt.weekOfTheCurrent = weekNumber;
             }
             
             DayChanger();

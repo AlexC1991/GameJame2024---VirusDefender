@@ -407,7 +407,7 @@ MonoBehaviour:
   barrierBool: {fileID: 11400000, guid: 98419a8c156d44445a5f56c61417b49e, type: 2}
   bugBool: {fileID: 11400000, guid: bf538b1c65ea9a74cb48f229a11b1b8d, type: 2}
   wallDetection: {fileID: 11400000, guid: 92816e60f8f524443b998d916d865c7f, type: 2}
-  movementSpeed: 6
+  movementSpeed: 2
 --- !u!114 &2189072063143777390
 MonoBehaviour:
   m_ObjectHideFlags: 0
