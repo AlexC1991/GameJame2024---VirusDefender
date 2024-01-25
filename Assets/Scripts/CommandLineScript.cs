@@ -11,7 +11,8 @@ namespace Batty251
         [SerializeField] private Text outputTextPrefab;
         private int _sections;
         [SerializeField] private WindowsOpen isItOpened;
-        
+        [SerializeField] private SettingsMenuContainer clickChecker;
+        private int clickAmount;
         private string currentDirectory = "SecurityComputer:/";
 
 
@@ -22,7 +23,7 @@ namespace Batty251
 
         public void StartConsoleWindow()
         {
-            StartCoroutine(StartConsoleLine());
+                StartCoroutine(StartConsoleLine());
         }
 
         private void OnInputValueChanged()

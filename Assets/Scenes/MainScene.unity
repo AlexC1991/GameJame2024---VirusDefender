@@ -496,6 +496,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commandWindow: {fileID: 1174752326}
   isItOpened: {fileID: 11400000, guid: 36e45b0b5bcddce4293b3c13c4f824ff, type: 2}
+  clickChecker: {fileID: 11400000, guid: 369fc0c5a6a1b6242adfcd4711aee30b, type: 2}
 --- !u!1 &138612200
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +754,7 @@ MonoBehaviour:
   isItOpened: {fileID: 11400000, guid: 36e45b0b5bcddce4293b3c13c4f824ff, type: 2}
   cooldownErrorMessage: {fileID: 1653025173}
   addedTotal: {fileID: 11400000, guid: 569c636863452e6419fe14cec9902db1, type: 2}
+  clickChecker: {fileID: 11400000, guid: 369fc0c5a6a1b6242adfcd4711aee30b, type: 2}
 --- !u!114 &212720042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1120,6 +1122,7 @@ MonoBehaviour:
   currentTile: {fileID: 11400000, guid: 6753a2ca28be70e4f9786071e54c193b, type: 2}
   isItOpened: {fileID: 11400000, guid: 36e45b0b5bcddce4293b3c13c4f824ff, type: 2}
   cooldownErrorMessage: {fileID: 1653025173}
+  clickChecker: {fileID: 11400000, guid: 369fc0c5a6a1b6242adfcd4711aee30b, type: 2}
 --- !u!114 &353440768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1442,6 +1445,7 @@ MonoBehaviour:
   startingGameDay: {fileID: 11400000, guid: 660e3d5dcde1dcd449dac3a8ad93d430, type: 2}
   toolBar: {fileID: 1776009123}
   titleScreenMenu: {fileID: 1225595198}
+  tileChildObjects: []
 --- !u!114 &519245400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4002,6 +4006,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1185630863}
     m_Modifications:
+    - target: {fileID: 3517187422174508419, guid: b9c147cf399fa444b86cf4667fd55dee, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3517187422174508420, guid: b9c147cf399fa444b86cf4667fd55dee, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -5030,6 +5038,10 @@ PrefabInstance:
       propertyPath: isItOpened
       value: 
       objectReference: {fileID: 11400000, guid: 36e45b0b5bcddce4293b3c13c4f824ff, type: 2}
+    - target: {fileID: 3875654940203147102, guid: 9723791170ba1314a8086b05149cc663, type: 3}
+      propertyPath: clickChecker
+      value: 
+      objectReference: {fileID: 11400000, guid: 369fc0c5a6a1b6242adfcd4711aee30b, type: 2}
     - target: {fileID: 3875654940203147103, guid: 9723791170ba1314a8086b05149cc663, type: 3}
       propertyPath: m_Name
       value: CommandScreen

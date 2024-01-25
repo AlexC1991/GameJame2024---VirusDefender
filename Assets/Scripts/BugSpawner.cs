@@ -26,21 +26,21 @@ namespace Batty251
 
         void Start()
         {
+            spawningFasteOrNot.infiteSpawning = false;
+            spawningFasteOrNot.randomizedBackground = false;
+            spawningFasteOrNot.spawnBugsFaster = false;
             currentLocation = transform;
             previousWeek = currentWeek.weekOfTheCurrent;
             spawnRateNumber = 10;
             StartCoroutine(StartOfChecks());
         }
-
-        IEnumerator SpawnInfiniteBugs()
+        
+        IEnumerator StartOfChecks()
         {
-            while (isSpawning)
-            {
-                bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
-                bug.transform.parent = bugStorageContainer.transform;
-                bug.transform.name = randomBugName + randomNumber;
-                yield return null;
-            }
+            yield return new WaitForSeconds(currentSpawningSpeed);
+            StartCoroutine(CheckHowManyChildren());
+            StartCoroutine(ChangeSpawnSpeed());
+            StartCoroutine(CheckInfiniteSpawning());
         }
 
         IEnumerator NormalSpawningBugs()
@@ -50,8 +50,8 @@ namespace Batty251
                 bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
                 bug.transform.parent = bugStorageContainer.transform;
                 bug.transform.name = randomBugName + randomNumber;
-                yield return null;
             }
+            yield return null;
         }
         
         private void Update()
@@ -79,15 +79,19 @@ namespace Batty251
             while (true)
             {
                 yield return new WaitForSeconds(currentSpawningSpeed);
-                
-                if (spawningFasteOrNot.infiteSpawning && !isSpawning && !checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
+
+                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
                 {
-                    isSpawning = true;
-                    StartCoroutine(SpawnInfiniteBugs());
-                }
-                else if (!spawningFasteOrNot.infiteSpawning && isSpawning)
-                {
-                    isSpawning = false;
+                    if (spawningFasteOrNot.infiteSpawning && !isSpawning)
+                    {
+                        isSpawning = true;
+                        StartCoroutine(SpawnInfiniteBugs());
+                    }
+                    else if (!spawningFasteOrNot.infiteSpawning && isSpawning)
+                    {
+                        isSpawning = false;
+                        StopCoroutine(SpawnInfiniteBugs());
+                    }
                 }
             }
         }
@@ -110,36 +114,40 @@ namespace Batty251
             }
         }
 
-        IEnumerator StartOfChecks()
-        {
-            if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
-            {
-                yield return new WaitForSeconds(currentSpawningSpeed);
-                StartCoroutine(CheckHowManyChildren());
-                StartCoroutine(ChangeSpawnSpeed());
-                StartCoroutine(CheckInfiniteSpawning());
-            }
-           
-        }
-
         IEnumerator CheckHowManyChildren()
         {
             while (true)
             {
                 yield return new WaitForSeconds(currentSpawningSpeed);
-                
-                if (!spawningFasteOrNot.infiteSpawning && !isSpawning && !checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
+               
+                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
                 {
-                    totalBugCounter = GetAllChildren(bugStorageContainer.transform);
-
-                    if (totalBugCounter.Length < spawnRateNumber)
+                    if (!spawningFasteOrNot.infiteSpawning && !isSpawning)
                     {
-                        StartCoroutine(NormalSpawningBugs());
+                        totalBugCounter = GetAllChildren(bugStorageContainer.transform);
+
+                        if (totalBugCounter.Length < spawnRateNumber)
+                        {
+                            StartCoroutine(NormalSpawningBugs());
+                        }
                     }
                 }
             }
         }
         
+        IEnumerator SpawnInfiniteBugs()
+        {
+            while (isSpawning)
+            {
+                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
+                {
+                    bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
+                    bug.transform.parent = bugStorageContainer.transform;
+                    bug.transform.name = randomBugName + randomNumber;
+                }
+                yield return new WaitForSeconds(currentSpawningSpeed); // Introduce a delay here
+            }
+        }
         
         private GameObject[] GetAllChildren(Transform parent)
         {

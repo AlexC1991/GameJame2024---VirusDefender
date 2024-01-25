@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 namespace Batty251
 {
@@ -9,13 +10,13 @@ namespace Batty251
         [SerializeField] private StartGameCheck startingGameDay;
         [SerializeField] private GameObject toolBar;
         [SerializeField] private GameObject titleScreenMenu;
-        private GameObject[] tileChildObjects;
+        public GameObject[] tileChildObjects;
         private GameObject[] bugChildObjects;
-        private bool stillMoreToKill;
+        private int numChildrenToDelete;
 
         private void Start()
         {
-            stillMoreToKill = false;
+            startingGameDay.gameStarted = false;
             titleScreenMenu.SetActive(true);
             toolBar.SetActive(false);
             desktopResetButton.resetDesktop = false;
@@ -26,26 +27,16 @@ namespace Batty251
         {
             if (desktopResetButton.resetDesktop || startingGameDay.gameStarted)
             {
-                StartCoroutine(ResetDesktop());
-                startingGameDay.gameStarted = false;
+                StartCoroutine(StatingReset());
             }
 
             if (desktopResetButton.endOfDayKillBugs || startingGameDay.gameStarted)
             {
-                StartCoroutine(GetThemBugs());
-                startingGameDay.gameStarted = false;
+                StartCoroutine(StartingToClearBugs());
             }
             
             bugChildObjects = GetAllChildren(bugParentContainer.transform);
-
-            if (bugChildObjects.Length < 1)
-            {
-                stillMoreToKill = false;
-            }
-            else
-            {
-                stillMoreToKill = true;
-            }
+            tileChildObjects = GetAllChildren(gameObject.transform).Where(c => c.GetComponent<Renderer>().sortingOrder == 1).ToArray();
         }
         
         public void StartingGameNow()
@@ -55,44 +46,49 @@ namespace Batty251
             toolBar.SetActive(true);
         }
 
+        IEnumerator StatingReset()
+        {
+            StartCoroutine(ResetDesktop());
+            yield return new WaitForSeconds(0.5f);
+            startingGameDay.gameStarted = false;
+            desktopResetButton.resetDesktop = false;
+        }
+
+        IEnumerator StartingToClearBugs()
+        {
+            StartCoroutine(GetThemBugs());
+            yield return new WaitForSeconds(0.5f);
+            startingGameDay.gameStarted = false;
+            desktopResetButton.endOfDayKillBugs = false;
+        }
+
         IEnumerator ResetDesktop()
         {
-            tileChildObjects = GetAllChildren(gameObject.transform);
+            tileChildObjects = GetAllChildren(gameObject.transform).Where(c => c.GetComponent<Renderer>().sortingOrder == 1).ToArray();
             foreach (GameObject c in tileChildObjects)
             {
                 c.GetComponent<Renderer>().sortingOrder = -1;
-                desktopResetButton.resetDesktop = false;
             }
             yield break;
         }
         
         IEnumerator GetThemBugs()
         {
-            bugChildObjects = GetAllChildren(bugParentContainer.transform);
-
-            // Adjust numChildrenToDelete as needed
-            int numChildrenToDelete = bugChildObjects.Length;
-
-            for (int i = 0; i < numChildrenToDelete; i++)
-            {
-                GameObject bugObject = bugChildObjects[i];
-                ParticleSystem particleSystem = bugObject.GetComponent<ParticleSystem>();
-                bugObject.GetComponent<BugMovement>().movementSpeed = 0;
-
-                // If it has a ParticleSystem component, play it
-                if (particleSystem != null)
+            numChildrenToDelete = bugChildObjects.Length;
+            
+                for (int i = 0; i < numChildrenToDelete; i++)
                 {
-                    particleSystem.Play();
+                    ParticleSystem particleSystem = bugChildObjects[i].GetComponent<ParticleSystem>();
+                    bugChildObjects[i].GetComponent<BugMovement>().movementSpeed = 0;
+                    if (particleSystem != null)
+                    {
+                        particleSystem.Play();
+                    }
+                    yield return new WaitForSeconds(0.3f);
+                    Destroy(bugChildObjects[i]);
                 }
-
-                // Wait for a short time to let the particle system play (you can adjust the duration if needed)
-                yield return new WaitForSeconds(0.3f);
-                Destroy(bugObject);
-            }
-
-            desktopResetButton.endOfDayKillBugs = false;
-            stillMoreToKill = false;
         }
+        
         
         private GameObject[] GetAllChildren(Transform parent)
         {

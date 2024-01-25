@@ -15,17 +15,18 @@ namespace Batty251
         [SerializeField] private StatusEffects currentTile;
         [SerializeField] private WindowsOpen isItOpened;
         [SerializeField] private GameObject cooldownErrorMessage;
+        [SerializeField] private SettingsMenuContainer clickChecker;
         private CoolDownInProgressScript coolingDownScript;
         private GameObject[] childObjects;
         private Transform childrenInParent;
-        private int doubleClickChecker;
+        private int clickAmount;
         private Sprite thisSprite;
 
         private void Awake()
         {
             thisSprite = gameObject.GetComponent<Image>().sprite;
             coolingDownScript = gameObject.GetComponent<CoolDownInProgressScript>();
-            doubleClickChecker = 0;
+            clickAmount = 0;
             
             for (int i = 0; i < percentageIndicators.Length; i++)
             {
@@ -80,22 +81,22 @@ namespace Batty251
 
         IEnumerator DoubleCLickCoroutine()
         {
-            doubleClickChecker += 1;
+            clickAmount += clickChecker.amountOfClicks;
             yield break;
         }
 
         private void Update()
         {
-            if (doubleClickChecker >= 1 && GetComponent<Image>().sprite == thisSprite )
+            if (clickAmount >= clickChecker.amountOfClicks && GetComponent<Image>().sprite == thisSprite )
             {
                 OnStart();
-                doubleClickChecker = 0;
+                clickAmount = 0;
             }
 
-            if (GetComponent<Image>().sprite != thisSprite && doubleClickChecker >= 1)
+            if (GetComponent<Image>().sprite != thisSprite && clickAmount >= clickChecker.amountOfClicks)
             {
                 StartCoroutine(CoolingErrorMessage());
-                doubleClickChecker = 0;
+                clickAmount = 0;
             }
         }
 
