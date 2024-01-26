@@ -7,5 +7,6 @@ namespace Batty251
         public Color originalTileColorEffect;
         public Color tileSlowEffectColor = Color.cyan;
         public bool _changedTheColor;
+        public float bugSpeed;
     }
 }

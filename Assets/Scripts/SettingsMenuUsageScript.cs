@@ -19,6 +19,7 @@ namespace Batty251
         [SerializeField] private GameObject spawnFasterNoButton;
         [SerializeField] private GameObject randomYesButton;
         [SerializeField] private GameObject randomNoButton;
+        [SerializeField] private DayAndWeekTrackerContainer randomBool;
         private Color originalButtonColor;
         private Color targetButtonColor = Color.green;
         private int backgroundSelection;
@@ -31,6 +32,7 @@ namespace Batty251
         private float maxSFXSliderValue = 1;
         private float currentVolumeTotal;
         private float maxMasterVolumeTotal = 1;
+        private int wallPaperNumber;
         
         private void Start()
         {
@@ -139,6 +141,17 @@ namespace Batty251
         {
             if (backGroundRandomized)
             {
+                if (randomBool.changeWallpaperIfRandom)
+                {
+                    backgroundSelection += 1;
+                    displayedBackground.sprite = imageSelectionForBackground[backgroundSelection];
+                    wallPaperBackgroundImage.GetComponent<SpriteRenderer>().sprite = displayedBackground.sprite;
+                    if (backgroundSelection >= 8)
+                    {
+                        backgroundSelection = -1;
+                    }
+
+                }
                 settingsToKeep.randomizedBackground = true;
             }
             else

@@ -19,6 +19,8 @@ namespace Batty251
         [SerializeField] private GameObject cooldownErrorMessage;
         [SerializeField] private BugTotalContainer addedTotal;
         [SerializeField] private SettingsMenuContainer clickChecker;
+        [SerializeField] private StatusEffects bugMovementSpeed;
+        [SerializeField] private MusicScriptableObject bugDeathSound;
         private CoolDownInProgressScript coolingDownScript;
         private Transform childrenInParent;
         private GameObject[] childObjects;
@@ -89,6 +91,7 @@ namespace Batty251
             isItOpened.isAWindowOpened = true;
             scanningWindow.SetActive(true);
             percentageText.SetActive(true);
+            bugDeathSound.sfxSoundFiles[3].PlayAudio();
             percentageIndicatorText.text = "1%";
             percentageIndicators[0].SetActive(true);
             yield return new WaitForSecondsRealtime(0.1f);
@@ -155,38 +158,38 @@ namespace Batty251
             childrenInParent = bugContainer.transform;
             childObjects = GetAllChildren(childrenInParent);
             numChildrenToDelete = Random.Range(0, childObjects.Length);
-            foundBugsResultScreen.SetActive(true);
             totalBugFoundText.text = numChildrenToDelete.ToString("00") + " Bugs";
+            foundBugsResultScreen.SetActive(true);
         }
-
+        
         public void WipeBugs()
         {
             foundBugsResultScreen.SetActive(false);
-            StartCoroutine(AddBugDeathsToTotal());
             StartCoroutine(GetThemBugs());
             isItOpened.isAWindowOpened = false;
         }
-
-
+        
         IEnumerator GetThemBugs()
         {
-            if (numChildrenToDelete <= childObjects.Length)
-            {
-                for (int i = 0; i < numChildrenToDelete; i++)
-                {
-                    ParticleSystem particleSystem = childObjects[i].GetComponent<ParticleSystem>();
-                    childObjects[i].GetComponent<BugMovement>().movementSpeed = 0;
-                    // If it has a ParticleSystem component, play it
-                    if (particleSystem != null)
-                    {
-                        particleSystem.Play();
-                    }
+            bugDeathSound.sfxSoundFiles[0].PlayAudio();
+            StartCoroutine(AddBugDeathsToTotal());
+            StartCoroutine(CoolingDownNowMode());
+            float originalBugMovementSpeed = bugMovementSpeed.bugSpeed;
 
-                    // Wait for a short time to let the particle system play (you can adjust the duration if needed)
-                    yield return new WaitForSeconds(0.3f);
-                    Destroy(childObjects[i]);
-                    StartCoroutine(CoolingDownNowMode());
+            for (int i = 0; i < numChildrenToDelete; i++)
+            {
+                BugMovement bugMovement = childObjects[i].GetComponent<BugMovement>();
+                ParticleSystem bugParticle = childObjects[i].GetComponent<ParticleSystem>();
+                
+                if (bugMovement != null)
+                {
+                    bugParticle.Play();
+                    bugMovement.SetSpeed(bugMovementSpeed.bugSpeed);
                 }
+
+                yield return new WaitForSeconds(0.3f);
+                Destroy(childObjects[i]);
+                bugMovementSpeed.bugSpeed = originalBugMovementSpeed;
             }
         }
 

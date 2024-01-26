@@ -26,11 +26,13 @@ namespace Batty251
 
         void Start()
         {
+            checkingIfResetting.pauseSpawning = false;
             spawningFasteOrNot.infiteSpawning = false;
             spawningFasteOrNot.randomizedBackground = false;
             spawningFasteOrNot.spawnBugsFaster = false;
             currentLocation = transform;
-            previousWeek = currentWeek.weekOfTheCurrent;
+            currentWeek.weekOfTheCurrent = 1;
+            previousWeek = 1;
             spawnRateNumber = 10;
             StartCoroutine(StartOfChecks());
         }
@@ -45,7 +47,7 @@ namespace Batty251
 
         IEnumerator NormalSpawningBugs()
         {
-            if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
+            if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
             {
                 bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
                 bug.transform.parent = bugStorageContainer.transform;
@@ -80,7 +82,7 @@ namespace Batty251
             {
                 yield return new WaitForSeconds(currentSpawningSpeed);
 
-                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
+                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
                 {
                     if (spawningFasteOrNot.infiteSpawning && !isSpawning)
                     {
@@ -120,7 +122,7 @@ namespace Batty251
             {
                 yield return new WaitForSeconds(currentSpawningSpeed);
                
-                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
+                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
                 {
                     if (!spawningFasteOrNot.infiteSpawning && !isSpawning)
                     {
@@ -139,7 +141,7 @@ namespace Batty251
         {
             while (isSpawning)
             {
-                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs)
+                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
                 {
                     bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
                     bug.transform.parent = bugStorageContainer.transform;

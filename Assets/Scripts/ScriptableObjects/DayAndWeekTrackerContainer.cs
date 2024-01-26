@@ -6,5 +6,6 @@ namespace Batty251
     {
         public int dayOfTheWeek;
         public int weekOfTheCurrent;
+        public bool changeWallpaperIfRandom;
     }
 }

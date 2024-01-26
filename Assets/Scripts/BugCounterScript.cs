@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +7,7 @@ namespace Batty251
     {
         [SerializeField] private Text bugKilledCounter;
         [SerializeField] private BugTotalContainer totalShowing;
+        [SerializeField] private ClipBoardSaveData bugTotalForScore;
 
         private void Start()
         {

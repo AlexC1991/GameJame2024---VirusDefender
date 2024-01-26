@@ -12,7 +12,7 @@ public class ScriptableAudioFile : ScriptableObject
 
     // Add an AudioSource field to the ScriptableObject
     [System.NonSerialized]
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     // Play the audio using the internal AudioSource
     public void PlayAudio()
     {
@@ -63,6 +63,14 @@ public class ScriptableAudioFile : ScriptableObject
 
         // Adjust the cutoff frequency to simulate bass boost
         lowPassFilter.cutoffFrequency = 22000f - (bass * 20000f);
+    }
+
+    public void UpdateVolume()
+    {
+        if (audioSource != null)
+        {
+            audioSource.volume = volume;
+        }
     }
 
     // Stop the audio

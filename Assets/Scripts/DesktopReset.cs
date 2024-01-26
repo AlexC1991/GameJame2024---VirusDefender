@@ -10,6 +10,7 @@ namespace Batty251
         [SerializeField] private StartGameCheck startingGameDay;
         [SerializeField] private GameObject toolBar;
         [SerializeField] private GameObject titleScreenMenu;
+        [SerializeField] private StatusEffects bugMovementSpeed;
         public GameObject[] tileChildObjects;
         private GameObject[] bugChildObjects;
         private int numChildrenToDelete;
@@ -75,18 +76,23 @@ namespace Batty251
         IEnumerator GetThemBugs()
         {
             numChildrenToDelete = bugChildObjects.Length;
+
+            float originalBugMovementSpeed = bugMovementSpeed.bugSpeed;
             
-                for (int i = 0; i < numChildrenToDelete; i++)
+            for (int i = 0; i < numChildrenToDelete; i++)
+            {
+                BugMovement bugMovement = bugChildObjects[i].GetComponent<BugMovement>();
+        
+                if (bugMovement != null)
                 {
-                    ParticleSystem particleSystem = bugChildObjects[i].GetComponent<ParticleSystem>();
-                    bugChildObjects[i].GetComponent<BugMovement>().movementSpeed = 0;
-                    if (particleSystem != null)
-                    {
-                        particleSystem.Play();
-                    }
-                    yield return new WaitForSeconds(0.3f);
-                    Destroy(bugChildObjects[i]);
+                    bugMovement.SetSpeed(bugMovementSpeed.bugSpeed); // Assuming you have a method in BugMovement to set the speed
                 }
+
+                yield return new WaitForSeconds(0.1f);
+                Destroy(bugChildObjects[i]);
+
+                bugMovementSpeed.bugSpeed = originalBugMovementSpeed;
+            }
         }
         
         

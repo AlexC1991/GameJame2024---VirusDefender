@@ -9,6 +9,7 @@ namespace Batty251
     public class ComputerHealthStatus : MonoBehaviour
     {
         [SerializeField] private Text computerHealthText;
+        [SerializeField] private ClipBoardSaveData percentageCalculatedSaveData;
         private GameObject[] tileHealthChildren;
         private int healthTotalNumber;
         private float checkInterval = 2f;
@@ -31,7 +32,6 @@ namespace Batty251
                 CalculateHealthPercentage();
             }
         }
-        
 
         private void CalculateHealthPercentage()
         {
@@ -61,6 +61,7 @@ namespace Batty251
                 
                 if (tileRenderer != null && tileRenderer.sortingOrder == -1)
                 {
+                    percentageCalculatedSaveData.percentageLeft = healthPercentage;
                     remainingTiles++;
                 }
             }

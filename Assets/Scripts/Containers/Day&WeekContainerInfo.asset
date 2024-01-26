@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b37934db3175d43b817d619c99a261, type: 3}
   m_Name: Day&WeekContainerInfo
   m_EditorClassIdentifier: 
-  dayOfTheWeek: 0
-  weekOfTheCurrent: 0
+  dayOfTheWeek: 2
+  weekOfTheCurrent: 1

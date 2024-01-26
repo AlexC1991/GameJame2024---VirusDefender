@@ -41,7 +41,7 @@ namespace Batty251
                     if (bugG != null)
                     {
                         bugM = bugG.GetComponent<BugMovement>();
-                        bugM.movementSpeed = originalMovementSpeed;
+                        _effects.bugSpeed = originalMovementSpeed;
                     }
                     
                 }
@@ -51,7 +51,7 @@ namespace Batty251
                 foreach (GameObject bugG in childinParent)
                 {
                     bugM = bugG.GetComponent<BugMovement>();
-                    bugM.movementSpeed = 0.1f;
+                    _effects.bugSpeed = 0.1f;
                 }
             }
             

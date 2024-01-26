@@ -16,6 +16,7 @@ namespace Batty251
         [SerializeField] private WindowsOpen isItOpened;
         [SerializeField] private GameObject cooldownErrorMessage;
         [SerializeField] private SettingsMenuContainer clickChecker;
+        [SerializeField] private MusicScriptableObject windowLoadingSound;
         private CoolDownInProgressScript coolingDownScript;
         private GameObject[] childObjects;
         private Transform childrenInParent;
@@ -112,6 +113,7 @@ namespace Batty251
             isItOpened.isAWindowOpened = true;
             scanningWindow.SetActive(true);
             percentageText.SetActive(true);
+            windowLoadingSound.sfxSoundFiles[3].PlayAudio();
             percentageIndicatorText.text = "1%";
             percentageIndicators[0].SetActive(true);
             yield return new WaitForSecondsRealtime(0.1f);

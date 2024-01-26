@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49fbe239c72162649953b68748323472, type: 3}
+  m_Name: MusicAndSoundContainer
+  m_EditorClassIdentifier: 
+  backGroundMusic:
+  - {fileID: 11400000, guid: 6b91c9b4f8ca68149a4bc4db56f57de0, type: 2}
+  - {fileID: 11400000, guid: 14d541f97c59c98409343fd4a4bf137f, type: 2}
+  - {fileID: 11400000, guid: 3f22026e921405c46a1e15f9d10138c8, type: 2}
+  - {fileID: 11400000, guid: 0b113c89a39a52d41b8b2f2b169c176c, type: 2}
+  - {fileID: 11400000, guid: f5f54c5c0bc661749a3475737e63958f, type: 2}
+  - {fileID: 11400000, guid: 7027c364b67bcfc4fa1ca8df9d4af0d4, type: 2}
+  sfxSoundFiles:
+  - {fileID: 11400000, guid: 949d2ce08ee239c42ba9bf56ef82d079, type: 2}
+  - {fileID: 11400000, guid: f3d0482628f1f6d41957d86106504dee, type: 2}
+  - {fileID: 11400000, guid: 8f624c106d053d84d93234023dc19487, type: 2}
+  - {fileID: 11400000, guid: bbba5e1c9d5736b4e87ca261e6bc67f2, type: 2}
+  - {fileID: 11400000, guid: 6739e51b8f0a5fd4a90a34ad703ffc38, type: 2}

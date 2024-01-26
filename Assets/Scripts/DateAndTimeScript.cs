@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,9 @@ namespace Batty251
         [SerializeField] private Text weekText;
         [SerializeField] private Text dayText;
         [SerializeField] private NewDesktopWindow desktopResetButton;
+        [SerializeField] private ClipBoardDisplay clipBoardDataStart;
+        [SerializeField] private ClipBoardSaveData savedClipBoardData;
+        [SerializeField] private DayAndWeekTrackerContainer randomBool;
         private String whatDay;
         private int hourDay;
         private int minuteDay;
@@ -24,7 +28,16 @@ namespace Batty251
         private string weekName = "Week: ";
         private string fullDayName;
         private string dayStartText = "Day: ";
-        
+        private bool activateOnce;
+        private bool isClipBoardDisplayed = false;
+        private int dayCounter;
+        private float totalTimeInGame;
+
+        private void Awake()
+        {
+            clipBoard.SetActive(false);
+        }
+
         private void Start()
         {
             whatDayAndWeekIsIt.dayOfTheWeek = 1;
@@ -32,7 +45,6 @@ namespace Batty251
             weekNumber = whatDayAndWeekIsIt.weekOfTheCurrent;
             switchNumber = whatDayAndWeekIsIt.dayOfTheWeek;
             DayChanger();
-            clipBoard.SetActive(false);
             StartOfDay();
         }
 
@@ -59,13 +71,14 @@ namespace Batty251
 
         private void Update()
         {
-            if (hourDay >= 16)
+            if (hourDay >= 16 && !isClipBoardDisplayed) // Check if clipboard is not displayed yet
             {
                 minuteDay = 0;
                 showZeroM = "0";
                 StartCoroutine(UpdateTime());
                 StartCoroutine(DisplayClipBoard());
                 StopCoroutine(minuteTrackerCoroutine);
+                isClipBoardDisplayed = true; // Set the flag to true to indicate clipboard is displayed
             }
 
             if (hourDay >= 10)
@@ -91,11 +104,16 @@ namespace Batty251
                 showZeroM = "0";
                 StartCoroutine(UpdateTime());
             }
+
+            totalTimeInGame += Time.deltaTime;
+            savedClipBoardData.totalTimePlayed = totalTimeInGame;
         }
 
         public void NextDay()
         {
+            randomBool.changeWallpaperIfRandom = true;
             desktopResetButton.resetDesktop = true;
+            isClipBoardDisplayed = false;
             
             if (switchNumber < 5)
             {
@@ -151,7 +169,11 @@ namespace Batty251
 
         IEnumerator DisplayClipBoard()
         {
+            Debug.Log("DisplayClipBoard Continously Being Called");
+            dayCounter += 1;
+            savedClipBoardData.totalDaysPlayed = dayCounter;
             clipBoard.SetActive(true);
+            clipBoardDataStart.EndOfDayDisplayed();
             dayText.text = dayStartText + fullDayName;
             weekText.text = weekName + weekNumber;
             desktopResetButton.endOfDayKillBugs = true;

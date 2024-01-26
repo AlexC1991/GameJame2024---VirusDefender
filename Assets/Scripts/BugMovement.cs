@@ -10,10 +10,10 @@ namespace Batty251
         [SerializeField] private BarrierDataContiner barrierBool;
         [SerializeField] private BugCollisionDetection bugBool;
         [SerializeField] private WallCollisionDataContainer wallDetection;
+        [SerializeField] private StatusEffects bugSpeed;
         private GameObject backgroundTiles;
         private GameObject[] childObjects;
         private Transform childrenInParent;
-        public float movementSpeed = 0.5f;
         private float originalMovement;
         private int _wallPaperHitCounter;
         private int _pathChooser;
@@ -28,7 +28,8 @@ namespace Batty251
 
          private void Awake()
          {
-             originalMovement = movementSpeed;
+             bugSpeed.bugSpeed = 0.5f;
+             originalMovement = bugSpeed.bugSpeed;
          }
 
          private void Start()
@@ -52,7 +53,6 @@ namespace Batty251
             {
                 bugBool.hitBug = true;
                 hitOtherBug = true;
-                Debug.Log("Detected Wall");
             }
         }
 
@@ -118,7 +118,6 @@ namespace Batty251
 
             if (!childNamesSet.Contains(hit.collider.gameObject.name))
             {
-                Debug.Log("Ray Hit This: " + hit.collider.gameObject.name);
                 StartCoroutine(StartTheBugAvoidenceSystem());
             }
 
@@ -128,25 +127,25 @@ namespace Batty251
         private void MoveLeft()
         {
             transform.eulerAngles = new Vector3(0, 0, 90);
-            transform.Translate(Vector2.up * (movementSpeed * Time.deltaTime));
+            transform.Translate(Vector2.up * (bugSpeed.bugSpeed * Time.deltaTime));
         }
 
         private void MoveRight()
         {
             transform.eulerAngles = new Vector3(0, 0, -90);
-            transform.Translate(-Vector2.down * (movementSpeed * Time.deltaTime));
+            transform.Translate(-Vector2.down * (bugSpeed.bugSpeed * Time.deltaTime));
         }
 
         private void MoveUp()
         {
             transform.eulerAngles = new Vector3(0, 0, 0);
-            transform.Translate(-Vector2.down * (movementSpeed * Time.deltaTime));
+            transform.Translate(-Vector2.down * (bugSpeed.bugSpeed * Time.deltaTime));
         }
 
         private void MoveDown()
         {
             transform.eulerAngles = new Vector3(0, 0, 180);
-            transform.Translate(-Vector2.down * (movementSpeed * Time.deltaTime));
+            transform.Translate(-Vector2.down * (bugSpeed.bugSpeed * Time.deltaTime));
         }
 
         private void PathChooser()
@@ -178,6 +177,11 @@ namespace Batty251
         {
             StartCoroutine(BugBehavior());
             yield break;
+        }
+        
+        public void SetSpeed(float newSpeed)
+        {
+            bugSpeed.bugSpeed = newSpeed;
         }
 
         IEnumerator BugBehavior()
