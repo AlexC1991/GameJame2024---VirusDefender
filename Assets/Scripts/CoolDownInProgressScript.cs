@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,14 +7,9 @@ namespace Batty251
 {
     public class CoolDownInProgressScript : MonoBehaviour
     {
-        private Sprite originalSprite;
+        [SerializeField] private Sprite originalSprite;
         [SerializeField] private Sprite[] countDownSprites;
         private float alphaColor;
-        private void Start()
-        {
-            alphaColor = GetComponentInChildren<Text>().color.a;
-            originalSprite = gameObject.GetComponent<Image>().sprite;
-        }
 
         public bool StartCoolDown()
         {
