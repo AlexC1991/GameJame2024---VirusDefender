@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -22,7 +23,12 @@ namespace Batty251
         private int randomNumber;
         private GameObject[] totalBugCounter;
         private int spawnRateNumber;
-        private bool isSpawning;
+        private int currentSpawnNumber;
+
+        private void Awake()
+        {
+            currentSpawningSpeed = normalSpawningSpeed;
+        }
 
         void Start()
         {
@@ -34,120 +40,58 @@ namespace Batty251
             currentWeek.weekOfTheCurrent = 1;
             previousWeek = 1;
             spawnRateNumber = 10;
-            StartCoroutine(StartOfChecks());
-        }
-        
-        IEnumerator StartOfChecks()
-        {
-            yield return new WaitForSeconds(currentSpawningSpeed);
-            StartCoroutine(CheckHowManyChildren());
-            StartCoroutine(ChangeSpawnSpeed());
-            StartCoroutine(CheckInfiniteSpawning());
+            StartCoroutine(SpawningBugsMain());
         }
 
-        IEnumerator NormalSpawningBugs()
+        IEnumerator SpawningBugsMain()
         {
-            if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
-            {
-                bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
-                bug.transform.parent = bugStorageContainer.transform;
-                bug.transform.name = randomBugName + randomNumber;
-            }
-            yield return null;
-        }
-        
-        private void Update()
-        {
-            randomNumber = Random.Range(1, 999999);
-            
-            if (spawningFasteOrNot.spawnBugsFaster)
-            {
-                currentSpawningSpeed = fastSpawning;
-            }
-            else
-            {
-                currentSpawningSpeed = normalSpawningSpeed;
-            }
-
-            if (currentWeek.weekOfTheCurrent > previousWeek)
-            {
-                spawnRateNumber += 10;
-                previousWeek = currentWeek.weekOfTheCurrent;
-            }
-        }
-
-        IEnumerator CheckInfiniteSpawning()
-        {
+            Debug.Log("Spawning Bug Coroutine Has Started Checking" + checkingIfResetting.pauseSpawning);
+           
             while (true)
             {
-                yield return new WaitForSeconds(currentSpawningSpeed);
-
-                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
+                if (!checkingIfResetting.pauseSpawning)
                 {
-                    if (spawningFasteOrNot.infiteSpawning && !isSpawning)
+                    Debug.Log("Still Spawning Bugs" + checkingIfResetting.pauseSpawning);
+
+                    randomNumber = Random.Range(1, 999999);
+                    totalBugCounter = GetAllChildren(bugStorageContainer.transform);
+                    currentSpawnNumber = totalBugCounter.Length;
+
+                    if (!spawningFasteOrNot.spawnBugsFaster && !spawningFasteOrNot.infiteSpawning &&
+                        currentSpawnNumber != spawnRateNumber)
                     {
-                        isSpawning = true;
-                        StartCoroutine(SpawnInfiniteBugs());
+                        currentSpawningSpeed = normalSpawningSpeed;
+                        yield return new WaitForSeconds(currentSpawningSpeed);
+                        bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
+                        bug.transform.parent = bugStorageContainer.transform;
+                        bug.transform.name = randomBugName + randomNumber;
                     }
-                    else if (!spawningFasteOrNot.infiteSpawning && isSpawning)
+                    else if (spawningFasteOrNot.spawnBugsFaster && !spawningFasteOrNot.infiteSpawning &&
+                             currentSpawnNumber != spawnRateNumber)
                     {
-                        isSpawning = false;
-                        StopCoroutine(SpawnInfiniteBugs());
+                        currentSpawningSpeed = fastSpawning;
+                        yield return new WaitForSeconds(currentSpawningSpeed);
+                        bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
+                        bug.transform.parent = bugStorageContainer.transform;
+                        bug.transform.name = randomBugName + randomNumber;
                     }
-                }
-            }
-        }
-
-        IEnumerator ChangeSpawnSpeed()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(currentSpawningSpeed);
-                
-                if (spawningFasteOrNot.spawnBugsFaster)
-                {
-                    currentSpawningSpeed = fastSpawning;
-                }
-                else
-                {
-                    currentSpawningSpeed = normalSpawningSpeed;
-                }
-                
-            }
-        }
-
-        IEnumerator CheckHowManyChildren()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(currentSpawningSpeed);
-               
-                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
-                {
-                    if (!spawningFasteOrNot.infiteSpawning && !isSpawning)
+                    else if (spawningFasteOrNot.spawnBugsFaster && spawningFasteOrNot.infiteSpawning)
                     {
-                        totalBugCounter = GetAllChildren(bugStorageContainer.transform);
+                        currentSpawningSpeed = fastSpawning;
+                        yield return new WaitForSeconds(currentSpawningSpeed);
+                        bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
+                        bug.transform.parent = bugStorageContainer.transform;
+                        bug.transform.name = randomBugName + randomNumber;
+                    }
 
-                        if (totalBugCounter.Length < spawnRateNumber)
-                        {
-                            StartCoroutine(NormalSpawningBugs());
-                        }
+                    if (currentWeek.weekOfTheCurrent > previousWeek)
+                    {
+                        spawnRateNumber += 10;
+                        previousWeek = currentWeek.weekOfTheCurrent;
                     }
                 }
-            }
-        }
-        
-        IEnumerator SpawnInfiniteBugs()
-        {
-            while (isSpawning)
-            {
-                if (!checkingIfResetting.resetDesktop && !checkingIfResetting.endOfDayKillBugs && !checkingIfResetting.pauseSpawning)
-                {
-                    bug = Instantiate(spawnGameBug, currentLocation.position, Quaternion.Euler(0, 0, 0));
-                    bug.transform.parent = bugStorageContainer.transform;
-                    bug.transform.name = randomBugName + randomNumber;
-                }
-                yield return new WaitForSeconds(currentSpawningSpeed); // Introduce a delay here
+
+                yield return null;
             }
         }
         

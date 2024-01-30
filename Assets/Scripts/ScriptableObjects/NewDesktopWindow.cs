@@ -7,5 +7,6 @@ namespace Batty251
         public bool resetDesktop;
         public bool endOfDayKillBugs;
         public bool pauseSpawning;
+        public bool tickTockUntilSpawning;
     }
 }

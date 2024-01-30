@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Batty251
@@ -37,11 +35,13 @@ namespace Batty251
 
         public void OpenStatisticsMenu()
         {
+            Time.timeScale = 0;
             statisticsMenu.SetActive(true);
         }
 
         public void CloseStatisticsMenu()
         {
+            Time.timeScale = 1;
             statisticsMenu.SetActive(false);
         }
     }

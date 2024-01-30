@@ -13,6 +13,7 @@ namespace Batty251
          {
              indexSound = 1;
              clickSound.sfxSoundFiles[indexSound].volume = musicSound.sfxVolume;
+             clickSound.sfxSoundFiles[indexSound].volume = musicSound.masterVolume;
              clickSound.sfxSoundFiles[indexSound].PlayAudio();
          }
 
@@ -20,6 +21,7 @@ namespace Batty251
          {
              indexSound = 2;
              clickSound.sfxSoundFiles[indexSound].volume = musicSound.sfxVolume;
+             clickSound.sfxSoundFiles[indexSound].volume = musicSound.masterVolume;
              clickSound.sfxSoundFiles[indexSound].PlayAudio();
          }
     }

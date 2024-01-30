@@ -54,8 +54,6 @@ namespace Batty251
                     _effects.bugSpeed = 0.1f;
                 }
             }
-            
-            Debug.Log("Effects Turned On " + _effects._changedTheColor );
         }
         
         

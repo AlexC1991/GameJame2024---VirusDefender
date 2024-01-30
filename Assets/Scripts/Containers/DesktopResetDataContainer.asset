@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: DesktopResetDataContainer
   m_EditorClassIdentifier: 
   resetDesktop: 0
+  endOfDayKillBugs: 0
+  pauseSpawning: 0
+  tickTockUntilSpawning: 0

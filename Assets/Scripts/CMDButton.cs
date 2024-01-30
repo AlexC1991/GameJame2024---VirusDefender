@@ -6,6 +6,7 @@ namespace Batty251
         [SerializeField] private GameObject commandWindow;
         [SerializeField] private WindowsOpen isItOpened;
         [SerializeField] private SettingsMenuContainer clickChecker;
+        [SerializeField] private CommandLineScript cmdBody;
         private int clickingAmount;
 
         private void Start()
@@ -21,6 +22,7 @@ namespace Batty251
             if (!isItOpened.isAWindowOpened && clickingAmount >= clickChecker.amountOfClicks)
             {
                 commandWindow.SetActive(true);
+                cmdBody.StartConsoleWindow();
                 clickingAmount = 0;
             }
         }

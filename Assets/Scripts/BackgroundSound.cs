@@ -38,6 +38,7 @@ namespace Batty251
                 musicIndex < backGroundSound.backGroundMusic.Length)
             {
                 backGroundSound.backGroundMusic[musicIndex].volume = musicSound.musicVolume;
+                backGroundSound.backGroundMusic[musicIndex].volume = musicSound.masterVolume;
             }
             
             

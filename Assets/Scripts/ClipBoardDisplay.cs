@@ -13,11 +13,12 @@ namespace Batty251
         [SerializeField] private Image whatFaceToDisplay;
         [SerializeField] private BugTotalContainer totalBugsInToolBar;
         [SerializeField] private MusicScriptableObject coinSound;
+        [SerializeField] private NewDesktopWindow pauseSpawning;
+        [SerializeField] private WindowsOpen endOfDayOpened;
         private int _gradeNumber;
-        private float _moneyTotal;
+        public float _moneyTotal;
         private float _totalForGrade;
         private bool _isSpinning;
-        private float _savedMoneyTotal;
         
         private void Awake()
         {
@@ -27,6 +28,8 @@ namespace Batty251
         public bool EndOfDayDisplayed()
         {
             StartCoroutine(DisplayTextAndSaveFunction());
+            pauseSpawning.pauseSpawning = true;
+            endOfDayOpened.isAWindowOpened = true;
             Debug.Log("Bool To Start It ALl Being Called Still");
             return false;
         }
@@ -71,6 +74,7 @@ namespace Batty251
                     whatFaceToDisplay.sprite = facesToDisplay[0];
                     faceTextToDisplay.text = "Great Work!";
                     _moneyTotal += 100;
+                    saveClipBoardData.moneyTotal += 100;
                     saveClipBoardData.bugNumberKilled += totalBugsInToolBar.totalBug;
                     totalBugsInToolBar.totalBug = 0;
                     StartCoroutine(MoneyDisplayText());
@@ -79,6 +83,7 @@ namespace Batty251
                     whatFaceToDisplay.sprite = facesToDisplay[1];
                     faceTextToDisplay.text = "Nice Job";
                     _moneyTotal += 50;
+                    saveClipBoardData.moneyTotal += 50;
                     saveClipBoardData.bugNumberKilled += totalBugsInToolBar.totalBug;
                     totalBugsInToolBar.totalBug = 0;
                     StartCoroutine(MoneyDisplayText());
@@ -87,6 +92,7 @@ namespace Batty251
                     whatFaceToDisplay.sprite = facesToDisplay[2];
                     faceTextToDisplay.text = "Do Better Tomorrow..";
                     _moneyTotal += 5;
+                    saveClipBoardData.moneyTotal += 5;
                     saveClipBoardData.bugNumberKilled += totalBugsInToolBar.totalBug;
                     totalBugsInToolBar.totalBug = 0;
                     StartCoroutine(MoneyDisplayText());
@@ -113,9 +119,6 @@ namespace Batty251
                 yield return new WaitForSeconds(1f / spinSpeed);
             }
             moneyTextDisplayed.text = "Total Money Earned A Total Of: " + "$" + targetTotal;
-            _savedMoneyTotal += _moneyTotal;
-            saveClipBoardData.moneyTotal = _savedMoneyTotal;
-
             _isSpinning = false;
         }
     }

@@ -20,7 +20,7 @@ namespace Batty251
         [SerializeField] private GameObject bugContainer;
         [SerializeField] private BugHealth _bugHealth;
         private GameObject[] bugChildren;
-        [SerializeField] private NewDesktopWindow pausingTheSpawning;
+        [SerializeField] private StoppedBugTimer pausingTheSpawning;
         
         private void Start()
         {
@@ -29,7 +29,7 @@ namespace Batty251
 
         public void StartConsoleWindow()
         {
-                StartCoroutine(StartConsoleLine());
+            StartCoroutine(StartConsoleLine());
         }
 
         private void OnInputValueChanged()
@@ -253,22 +253,16 @@ namespace Batty251
         {
             inputFieldParent.text = "Starting To Power Down Infested USB Device..";
             yield return new WaitForSeconds(0.5f);
-            pausingTheSpawning.pauseSpawning = true;
-            yield return new WaitForSeconds(0.5f);
             inputFieldParent.text = "\n \n \n Rebooting In Progress..";
             yield return new WaitForSeconds(0.2f);
             inputFieldParent.text += "\n \n \n \n In T-minus 2 minute.. ";
             yield return new WaitForSeconds(0.2f);
             inputFieldParent.text += " \n \n \n \n \n Press the Enter/Return Key To Go Back";
-            StartCoroutine(RebootBackUp());
+            pausingTheSpawning.StopTheSpawning();
+            Debug.Log("Power Reboot In Motion");
             _sections = 1;
         }
-
-        IEnumerator RebootBackUp()
-        {
-            yield return new WaitForSeconds(8f);
-            pausingTheSpawning.pauseSpawning = false;
-        }
+        
         
         private GameObject[] GetAllChildren(Transform parent)
         {

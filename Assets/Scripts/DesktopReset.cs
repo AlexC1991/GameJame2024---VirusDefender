@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace Batty251
         public GameObject[] tileChildObjects;
         private GameObject[] bugChildObjects;
         private int numChildrenToDelete;
+        private bool enoughBugsToDelete;
+        public int originalAmountOfTiles = 0;
 
         private void Start()
         {
@@ -22,22 +25,10 @@ namespace Batty251
             toolBar.SetActive(false);
             desktopResetButton.resetDesktop = false;
             desktopResetButton.endOfDayKillBugs = false;
-        }
+            StartCoroutine(GetThemBugs());
+            StartCoroutine(NewDayAwaits());
+            StartCoroutine(ResetDesktop());
 
-        private void Update()
-        {
-            if (desktopResetButton.resetDesktop || startingGameDay.gameStarted)
-            {
-                StartCoroutine(StatingReset());
-            }
-
-            if (desktopResetButton.endOfDayKillBugs || startingGameDay.gameStarted)
-            {
-                StartCoroutine(StartingToClearBugs());
-            }
-            
-            bugChildObjects = GetAllChildren(bugParentContainer.transform);
-            tileChildObjects = GetAllChildren(gameObject.transform).Where(c => c.GetComponent<Renderer>().sortingOrder == 1).ToArray();
         }
         
         public void StartingGameNow()
@@ -47,54 +38,123 @@ namespace Batty251
             toolBar.SetActive(true);
         }
 
-        IEnumerator StatingReset()
+        private void Update()
         {
-            StartCoroutine(ResetDesktop());
-            yield return new WaitForSeconds(0.5f);
-            startingGameDay.gameStarted = false;
-            desktopResetButton.resetDesktop = false;
-        }
-
-        IEnumerator StartingToClearBugs()
-        {
-            StartCoroutine(GetThemBugs());
-            yield return new WaitForSeconds(0.5f);
-            startingGameDay.gameStarted = false;
-            desktopResetButton.endOfDayKillBugs = false;
+            tileChildObjects = GetAllChildren(gameObject.transform).Where(c => c.GetComponent<Renderer>().sortingOrder == 1).ToArray();
         }
 
         IEnumerator ResetDesktop()
         {
-            tileChildObjects = GetAllChildren(gameObject.transform).Where(c => c.GetComponent<Renderer>().sortingOrder == 1).ToArray();
-            foreach (GameObject c in tileChildObjects)
+            while (true)
             {
-                c.GetComponent<Renderer>().sortingOrder = -1;
+                if (desktopResetButton.resetDesktop)
+                {
+                    tileChildObjects = GetAllChildren(gameObject.transform).Where(c => c.GetComponent<Renderer>().sortingOrder == 1).ToArray();
+                    GameObject[] tilesToReset = tileChildObjects.ToArray();  // Create a copy of the array
+
+                    foreach (GameObject c in tilesToReset)
+                    {
+                        c.GetComponent<Renderer>().sortingOrder = -1;
+                    }
+
+                    if (tilesToReset.Length <= originalAmountOfTiles)
+                    {
+                        desktopResetButton.resetDesktop = false;
+                    }
+                }
+
+                yield return null;
             }
-            yield break;
         }
         
         IEnumerator GetThemBugs()
         {
-            numChildrenToDelete = bugChildObjects.Length;
-
-            float originalBugMovementSpeed = bugMovementSpeed.bugSpeed;
-            
-            for (int i = 0; i < numChildrenToDelete; i++)
+            while (true)
             {
-                BugMovement bugMovement = bugChildObjects[i].GetComponent<BugMovement>();
-        
-                if (bugMovement != null)
+                if (desktopResetButton.endOfDayKillBugs)
                 {
-                    bugMovement.SetSpeed(bugMovementSpeed.bugSpeed); // Assuming you have a method in BugMovement to set the speed
+                    bugChildObjects = GetAllChildren(bugParentContainer.transform);
+                    numChildrenToDelete = bugChildObjects.Length;
+
+                    float originalBugMovementSpeed = bugMovementSpeed.bugSpeed;
+
+                    for (int i = 0; i < numChildrenToDelete; i++)
+                    {
+                        BugMovement bugMovement = bugChildObjects[i].GetComponent<BugMovement>();
+
+                        if (bugMovement != null)
+                        {
+                            bugMovement.SetSpeed(bugMovementSpeed
+                                .bugSpeed); // Assuming you have a method in BugMovement to set the speed
+                        }
+
+                        if (bugChildObjects.Length > 0)
+                        {
+                            yield return new WaitForSeconds(0.001f);
+                            Destroy(bugChildObjects[i]);
+                            bugMovementSpeed.bugSpeed = originalBugMovementSpeed;
+                        }
+                        else
+                        {
+                            desktopResetButton.endOfDayKillBugs = false;
+                        }
+                    }
                 }
 
-                yield return new WaitForSeconds(0.1f);
-                Destroy(bugChildObjects[i]);
-
-                bugMovementSpeed.bugSpeed = originalBugMovementSpeed;
+                yield return null;
             }
         }
-        
+
+
+        IEnumerator NewDayAwaits()
+        {
+            while (true)
+            {
+                if (startingGameDay.gameStarted)
+                {
+                    desktopResetButton.pauseSpawning = true;
+                    bugChildObjects = GetAllChildren(bugParentContainer.transform);
+                    numChildrenToDelete = bugChildObjects.Length;
+
+                    float originalBugMovementSpeed = bugMovementSpeed.bugSpeed;
+
+                    for (int i = 0; i < numChildrenToDelete; i++)
+                    {
+                        BugMovement bugMovement = bugChildObjects[i].GetComponent<BugMovement>();
+
+                        if (bugMovement != null)
+                        {
+                            bugMovement.SetSpeed(bugMovementSpeed
+                                .bugSpeed); // Assuming you have a method in BugMovement to set the speed
+                        }
+
+                        if (bugChildObjects.Length > 0)
+                        {
+                            yield return new WaitForSeconds(0.001f);
+                            Destroy(bugChildObjects[i]);
+                            bugMovementSpeed.bugSpeed = originalBugMovementSpeed;
+                        }
+                    }
+
+                    yield return new WaitForSeconds(0.1f);
+                    tileChildObjects = GetAllChildren(gameObject.transform).Where(c => c.GetComponent<Renderer>().sortingOrder == 1).ToArray();
+                    GameObject[] tilesToReset = tileChildObjects.ToArray();  // Create a copy of the array
+
+                    foreach (GameObject c in tilesToReset)
+                    {
+                        c.GetComponent<Renderer>().sortingOrder = -1;
+                    }
+
+                    if (tilesToReset.Length <= originalAmountOfTiles)
+                    {
+                        desktopResetButton.pauseSpawning = false;
+                        startingGameDay.gameStarted = false;
+                    }
+                }
+
+                yield return null;
+            }
+        }
         
         private GameObject[] GetAllChildren(Transform parent)
         {

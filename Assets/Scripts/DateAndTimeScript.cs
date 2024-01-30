@@ -17,6 +17,8 @@ namespace Batty251
         [SerializeField] private ClipBoardDisplay clipBoardDataStart;
         [SerializeField] private ClipBoardSaveData savedClipBoardData;
         [SerializeField] private DayAndWeekTrackerContainer randomBool;
+        [SerializeField] private WindowsOpen endOfDayOpened;
+        [SerializeField] private StartGameCheck resetDay;
         private String whatDay;
         private int hourDay;
         private int minuteDay;
@@ -114,7 +116,6 @@ namespace Batty251
             randomBool.changeWallpaperIfRandom = true;
             desktopResetButton.resetDesktop = true;
             isClipBoardDisplayed = false;
-            
             if (switchNumber < 5)
             {
                 switchNumber += 1;
@@ -162,6 +163,10 @@ namespace Batty251
 
         private void StartOfDay()
         {
+            resetDay.gameStarted = true;
+            desktopResetButton.endOfDayKillBugs = false;
+            desktopResetButton.pauseSpawning = false;
+            endOfDayOpened.isAWindowOpened = false;
             minuteTrackerCoroutine = StartCoroutine(MinuteTracker());
             hourDay = 8;
             minuteDay = 0;
@@ -177,6 +182,7 @@ namespace Batty251
             dayText.text = dayStartText + fullDayName;
             weekText.text = weekName + weekNumber;
             desktopResetButton.endOfDayKillBugs = true;
+            desktopResetButton.pauseSpawning = true;
             yield break;
         }
     }

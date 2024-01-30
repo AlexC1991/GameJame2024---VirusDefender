@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Batty251
 {
-    public class VirusSeeker : MonoBehaviour
+    public class VirusSeekerThree : MonoBehaviour
     {
 
         [SerializeField] private GameObject scanningWindow;
@@ -21,7 +21,7 @@ namespace Batty251
         [SerializeField] private SettingsMenuContainer clickChecker;
         [SerializeField] private StatusEffects bugMovementSpeed;
         [SerializeField] private MusicScriptableObject bugDeathSound;
-        private CoolDownInProgressScript coolingDownScript;
+        private CoolDownProgramThree coolingDownScript;
         private Transform childrenInParent;
         private GameObject[] childObjects;
         private int numChildrenToDelete;
@@ -31,7 +31,7 @@ namespace Batty251
         private void Awake()
         {
             thisSprite = gameObject.GetComponent<Image>().sprite;
-            coolingDownScript = gameObject.GetComponent<CoolDownInProgressScript>();
+            coolingDownScript = gameObject.GetComponent<CoolDownProgramThree>();
             scanningWindow.SetActive(false);
             percentageText.SetActive(false);
             foundBugsResultScreen.SetActive(false);
@@ -97,16 +97,16 @@ namespace Batty251
             yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "5%";
             percentageIndicators[1].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.3f);
+            yield return new WaitForSecondsRealtime(0.2f);
             percentageIndicatorText.text = "8%";
             percentageIndicators[2].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.2f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "12%";
             percentageIndicators[3].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(0.2f);
             percentageIndicatorText.text = "20%";
             percentageIndicators[4].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.3f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "29%";
             percentageIndicators[5].SetActive(true);
             yield return new WaitForSecondsRealtime(0.2f);
@@ -118,37 +118,37 @@ namespace Batty251
             yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "52%";
             percentageIndicators[8].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.3f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "59%";
             percentageIndicators[9].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.6f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "65%";
             percentageIndicators[10].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.4f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "69%";
             percentageIndicators[11].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.3f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "74%";
             percentageIndicators[12].SetActive(true);
             yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "79%";
             percentageIndicators[13].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.3f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "85%";
             percentageIndicators[14].SetActive(true);
             yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "92%";
             percentageIndicators[15].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.7f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "96%";
             percentageIndicators[16].SetActive(true);
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(0.1f);
             percentageIndicatorText.text = "98%";
             percentageIndicators[17].SetActive(true);
             yield return new WaitForSecondsRealtime(1f);
             percentageIndicatorText.text = "99%";
             percentageIndicators[18].SetActive(true);
-            yield return new WaitForSecondsRealtime(1.5f);
+            yield return new WaitForSecondsRealtime(1f);
             scanningWindow.SetActive(false);
             percentageText.SetActive(false);
             for (int i = 0; i < percentageIndicators.Length; i++)
@@ -157,12 +157,20 @@ namespace Batty251
             }
             childrenInParent = bugContainer.transform;
             childObjects = GetAllChildren(childrenInParent);
-            numChildrenToDelete = Random.Range(0, childObjects.Length);
+            if (childObjects != null)
+            {
+                numChildrenToDelete = childObjects.Length;
+            }
+            else
+            {
+                numChildrenToDelete = 0;
+            }
+            
             totalBugFoundText.text = numChildrenToDelete.ToString("00") + " Bugs";
             foundBugsResultScreen.SetActive(true);
         }
         
-        public void WipeBugs()
+        public void WipeBugsThree()
         {
             if (this.gameObject.activeSelf)
             {
@@ -174,6 +182,7 @@ namespace Batty251
             {
                 return;
             }
+            
         }
         
         IEnumerator GetThemBugs()
@@ -194,7 +203,7 @@ namespace Batty251
                     bugMovement.SetSpeed(bugMovementSpeed.bugSpeed);
                 }
 
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.3f);
                 Destroy(childObjects[i]);
                 bugMovementSpeed.bugSpeed = originalBugMovementSpeed;
             }
